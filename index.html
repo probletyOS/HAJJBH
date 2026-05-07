@@ -1,0 +1,1655 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الحج - رحلة القلوب إلى الله | مشروع تعليمي</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@400;600;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --olive: #556b2f;
+            --olive-light: #8fbc8f;
+            --olive-dark: #3b4d20;
+            --beige: #f5f5dc;
+            --beige-dark: #e8e0c5;
+            --brown: #5d4037;
+            --brown-light: #8d6e63;
+            --gold: #c5a059;
+            --cream: #f9f6ee;
+            --black: #1a1a1a;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cairo', 'Tajawal', sans-serif;
+            background-color: var(--cream);
+            color: var(--brown);
+            overflow-x: hidden;
+            line-height: 1.9;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        /* ===== LOADER SCREEN ===== */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(135deg, #1e2b12 0%, #2d3b1f 40%, #3b4d20 100%);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+                        visibility 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #loader.hidden-loader {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* Animated loader background shapes */
+        .loader-bg {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .loader-shape {
+            position: absolute;
+            opacity: 0.12;
+            border: 3px solid var(--gold);
+            animation: loaderRotate 20s linear infinite;
+        }
+
+        .loader-shape:nth-child(1) {
+            width: 350px; height: 350px;
+            top: -100px; left: -100px;
+            border-radius: 40%;
+            animation-duration: 18s;
+            border-style: dashed;
+        }
+
+        .loader-shape:nth-child(2) {
+            width: 280px; height: 280px;
+            bottom: -80px; right: -80px;
+            transform: rotate(45deg);
+            animation-duration: 14s;
+            animation-direction: reverse;
+        }
+
+        .loader-shape:nth-child(3) {
+            width: 180px; height: 180px;
+            top: 50%; left: 15%;
+            border-radius: 50%;
+            border-style: dotted;
+            animation-duration: 25s;
+            opacity: 0.08;
+        }
+
+        .loader-shape:nth-child(4) {
+            width: 100px; height: 100px;
+            bottom: 25%; right: 20%;
+            transform: rotate(45deg);
+            animation-duration: 10s;
+        }
+
+        .loader-shape:nth-child(5) {
+            width: 60px; height: 60px;
+            top: 20%; right: 30%;
+            border-radius: 50%;
+            animation: loaderPulse 3s ease-in-out infinite;
+        }
+
+        .loader-geo-star {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px; height: 500px;
+            opacity: 0.06;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .loader-geo-star::before,
+        .loader-geo-star::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 4px solid var(--gold);
+            animation: loaderRotate 30s linear infinite;
+        }
+
+        .loader-geo-star::after {
+            transform: rotate(45deg);
+            animation-direction: reverse;
+        }
+
+        @keyframes loaderRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes loaderPulse {
+            0%, 100% { transform: scale(1); opacity: 0.12; }
+            50% { transform: scale(1.3); opacity: 0.06; }
+        }
+
+        /* Loader Content */
+        .loader-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .orbit-system {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            margin-bottom: 35px;
+        }
+
+        .orbit-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid rgba(197, 160, 89, 0.3);
+            border-radius: 50%;
+        }
+
+        .orbit-ring.outer {
+            width: 240px; height: 240px;
+            animation: spin 10s linear infinite;
+        }
+
+        .orbit-ring.middle {
+            width: 190px; height: 190px;
+            animation: spin 7s linear infinite reverse;
+        }
+
+        .orbit-ring.inner {
+            width: 140px; height: 140px;
+            animation: spin 5s linear infinite;
+        }
+
+        .orbit-node {
+            position: absolute;
+            top: -8px; left: 50%;
+            transform: translateX(-50%);
+            width: 16px; height: 16px;
+            background: var(--gold);
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(197,160,89,0.6);
+        }
+
+        .orbit-node::before {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border: 1px solid rgba(197,160,89,0.3);
+            border-radius: 50%;
+        }
+
+        .orbit-system .crescent {
+            position: absolute;
+            top: -10px; left: 50%;
+            transform: translateX(-50%);
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            box-shadow: -4px -4px 0 0 var(--gold);
+        }
+
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .loader-kaaba {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 70px;
+            background: #0a0a0a;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 40px rgba(197,160,89,0.5);
+            animation: loaderKaabaPulse 2s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        .loader-kaaba::before {
+            content: '';
+            position: absolute;
+            top: 18px; left: 50%;
+            transform: translateX(-50%);
+            width: 14px; height: 22px;
+            background: var(--gold);
+            border-radius: 2px 2px 0 0;
+        }
+
+        @keyframes loaderKaabaPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 30px rgba(197,160,89,0.4); }
+            50% { transform: translate(-50%, -50%) scale(1.15); box-shadow: 0 0 60px rgba(197,160,89,0.7); }
+        }
+
+        .loader-text h2 {
+            font-family: 'Amiri', serif;
+            font-size: 2.4rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        .loader-text p {
+            color: var(--beige-dark);
+            font-size: 1.15rem;
+            letter-spacing: 3px;
+            animation: loaderBlink 1.5s infinite;
+        }
+
+        @keyframes loaderBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.25; }
+        }
+
+        @media (max-width: 480px) {
+            .loader-text h2 { font-size: 1.6rem; }
+            .orbit-system { width: 200px; height: 200px; }
+            .orbit-ring.outer { width: 200px; height: 200px; }
+            .orbit-ring.middle { width: 160px; height: 160px; }
+            .orbit-ring.inner { width: 120px; height: 120px; }
+            .loader-kaaba { width: 55px; height: 55px; }
+        }
+
+        /* ===== Background Animation (Main Page) ===== */
+        .floating-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(180deg, #f9f6ee 0%, #ece5d3 100%);
+        }
+
+        .shape {
+            position: absolute;
+            opacity: 0.12;
+            animation: floatUp linear infinite;
+            color: var(--olive);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) rotate(0deg) scale(1); }
+            100% { transform: translateY(-10vh) rotate(360deg) scale(1.2); }
+        }
+
+        /* Shapes CSS */
+        .shape-kaaba {
+            width: 40px; height: 40px;
+            background: #1a1a1a;
+            border: 2px solid var(--gold);
+            position: relative;
+        }
+        .shape-kaaba::before {
+            content: ''; position: absolute;
+            top: 10px; left: 50%; transform: translateX(-50%);
+            width: 8px; height: 12px; background: var(--gold);
+        }
+        .shape-star {
+            width: 40px; height: 40px;
+            position: relative; color: var(--olive);
+        }
+        .shape-star::before, .shape-star::after {
+            content: ''; position: absolute; width: 100%; height: 100%;
+            border: 3px solid currentColor;
+        }
+        .shape-star::before { transform: rotate(45deg); }
+        .shape-crescent {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            box-shadow: -8px -8px 0 0 currentColor;
+        }
+        .shape-geo {
+            width: 36px; height: 36px;
+            background: transparent;
+            border: 3px solid currentColor;
+            transform: rotate(45deg);
+        }
+
+        /* ===== Navbar ===== */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background: rgba(59, 77, 32, 0.96);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 3px solid var(--gold);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            padding: 10px 0;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            list-style: none;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 0 15px;
+        }
+
+        nav a {
+            color: var(--beige);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 8px 16px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            white-space: nowrap;
+        }
+
+        nav a:hover, nav a.active {
+            background: var(--gold);
+            color: var(--black);
+            border-color: var(--gold);
+            box-shadow: 0 4px 12px rgba(197, 160, 89, 0.3);
+        }
+
+        /* ===== Hero Section ===== */
+        header {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            text-align: center;
+            padding-top: 100px;
+            overflow: hidden;
+        }
+
+        .hero-bg-text {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 18vw;
+            font-family: 'Amiri', serif;
+            color: var(--olive);
+            opacity: 0.045;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+            line-height: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .bismillah {
+            font-family: 'Amiri', serif;
+            font-size: 2.2rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .hero-title {
+            font-size: 3.8rem;
+            color: var(--olive-dark);
+            text-shadow: 2px 2px 0px rgba(197,160,89,0.3);
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            font-size: 1.6rem;
+            color: var(--brown);
+            margin-bottom: 30px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--olive);
+            color: var(--beige);
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 700;
+            border: 2px solid var(--gold);
+            font-size: 1.1rem;
+            box-shadow: 0 6px 20px rgba(85,107,47,0.3);
+        }
+
+        /* ===== General Sections ===== */
+        section {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2.6rem;
+            color: var(--olive);
+            display: inline-block;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--gold);
+            border-radius: 2px;
+        }
+
+        .section-desc {
+            color: var(--brown-light);
+            font-size: 1.1rem;
+            margin-top: 10px;
+        }
+
+        /* ===== Cards & Boxes ===== */
+        .card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 28px;
+            box-shadow: 0 8px 30px rgba(85,107,47,0.12);
+            border: 1px solid var(--beige-dark);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(85,107,47,0.2);
+        }
+
+        .box-gold { border-right: 5px solid var(--gold); }
+        .box-olive { border-right: 5px solid var(--olive); }
+        .box-brown { border-right: 5px solid var(--brown); }
+
+        /* ===== Miqat Section ===== */
+        .miqat-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+        }
+
+        .temporal-mind {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .time-node {
+            background: var(--white);
+            border: 2px solid var(--olive-light);
+            border-radius: 16px;
+            padding: 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .time-node:hover {
+            background: #f4f9f0;
+            transform: scale(1.03);
+        }
+
+        .time-node .icon {
+            font-size: 2.5rem;
+            color: var(--olive);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .time-node h3 {
+            color: var(--olive-dark);
+            font-size: 1.4rem;
+        }
+
+        .map-mind {
+            position: relative;
+            min-height: 520px;
+            background: radial-gradient(circle at center, rgba(197,160,89,0.12) 0%, transparent 70%);
+            border: 2px dashed var(--olive-light);
+            border-radius: 24px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .kaaba-node {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px; height: 80px;
+            background: #0f0f0f;
+            border: 3px solid var(--gold);
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(197,160,89,0.5);
+        }
+
+        .kaaba-node::before {
+            content: ''; position: absolute;
+            top: 18px; left: 50%; transform: translateX(-50%);
+            width: 14px; height: 20px;
+            background: var(--gold);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .kaaba-node span {
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 0.75rem;
+            margin-top: 22px;
+            font-family: 'Amiri', serif;
+        }
+
+        .miqat-branch {
+            position: absolute;
+            background: var(--white);
+            border: 2px solid var(--brown-light);
+            padding: 14px 18px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            z-index: 4;
+            min-width: 140px;
+            transition: 0.3s;
+        }
+
+        .miqat-branch:hover {
+            z-index: 10;
+            transform: scale(1.08);
+            border-color: var(--gold);
+            box-shadow: 0 8px 24px rgba(197,160,89,0.3);
+        }
+
+        .miqat-branch .dist {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--brown);
+            display: block;
+        }
+
+        .miqat-branch .name {
+            font-size: 1rem;
+            color: var(--olive-dark);
+            font-weight: 700;
+        }
+
+        .map-line {
+            position: absolute;
+            height: 3px;
+            background: linear-gradient(90deg, var(--olive-light), var(--gold));
+            opacity: 0.6;
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .pos-dhul { top: 50%; left: 5%; transform: translateY(-50%); }
+        .line-dhul { top: 50%; left: 15%; width: 33%; transform: rotate(0deg); }
+
+        .pos-juhfa { top: 12%; left: 15%; }
+        .line-juhfa { top: 22%; left: 28%; width: 22%; transform: rotate(-35deg); }
+
+        .pos-qarn { top: 12%; left: 70%; }
+        .line-qarn { top: 22%; left: 48%; width: 22%; transform: rotate(35deg); }
+
+        .pos-dhat { top: 50%; right: 5%; transform: translateY(-50%); }
+        .line-dhat { top: 50%; right: 15%; width: 33%; transform: rotate(0deg); }
+
+        .pos-ylml { bottom: 8%; left: 50%; transform: translateX(-50%); }
+        .line-ylml { bottom: 22%; left: 50%; width: 16%; transform: translateX(-50%) rotate(90deg); transform-origin: center bottom; }
+
+        /* ===== Ihram Section ===== */
+        .ihram-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .talbiyah-box {
+            background: var(--olive-dark);
+            color: var(--beige);
+            border-radius: 20px;
+            padding: 35px;
+            text-align: center;
+            border: 2px solid var(--gold);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .talbiyah-box::before {
+            content: '❝';
+            position: absolute;
+            top: -10px; right: 20px;
+            font-size: 6rem;
+            color: rgba(197,160,89,0.2);
+            line-height: 1;
+        }
+
+        .talbiyah-box h3 {
+            color: var(--gold);
+            margin-bottom: 15px;
+            font-size: 1.6rem;
+        }
+
+        .talbiyah-text {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            line-height: 2.2;
+            color: #fff;
+        }
+
+        .hadith-box {
+            background: #fff8e1;
+            border: 1px solid var(--gold);
+            border-radius: 16px;
+            padding: 25px;
+            font-family: 'Amiri', serif;
+            font-size: 1.15rem;
+            color: var(--brown);
+            position: relative;
+        }
+
+        .hadith-box::before {
+            content: '﷽';
+            display: block;
+            font-size: 1.4rem;
+            color: var(--olive);
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        .etiquettes-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .etiquette-item {
+            flex: 1 1 220px;
+            max-width: 260px;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 22px;
+            border-top: 5px solid var(--olive);
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
+        }
+
+        .etiquette-item:hover {
+            background: #f4f9f0;
+            transform: translateY(-5px);
+        }
+
+        .etiquette-number {
+            width: 36px; height: 36px;
+            background: var(--olive);
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        /* ===== Flip Cards - Prohibitions ===== */
+        .flip-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .flip-card {
+            background: transparent;
+            perspective: 1000px;
+            height: 200px;
+        }
+
+        .flip-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .flip-card:hover .flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-front, .flip-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            border: 1px solid var(--beige-dark);
+        }
+
+        .flip-front {
+            background: var(--white);
+            color: var(--olive-dark);
+        }
+
+        .flip-front h4 {
+            font-size: 1.3rem;
+            margin-top: 10px;
+        }
+
+        .flip-icon {
+            font-size: 2.2rem;
+            color: var(--gold);
+        }
+
+        .flip-back {
+            background: var(--brown);
+            color: var(--beige);
+            transform: rotateY(180deg);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        /* ===== Tawaf Timeline ===== */
+        .timeline-container {
+            position: relative;
+            padding-right: 35px;
+            margin-top: 30px;
+        }
+
+        .timeline-line-main {
+            position: absolute;
+            top: 0; bottom: 0; right: 14px;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--olive), var(--gold));
+            border-radius: 4px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: var(--white);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border: 1px solid var(--beige-dark);
+            transition: 0.3s;
+        }
+
+        .timeline-item:hover {
+            border-right: 5px solid var(--olive);
+        }
+
+        .timeline-dot {
+            position: absolute;
+            right: -28px;
+            top: 28px;
+            width: 18px;
+            height: 18px;
+            background: var(--gold);
+            border: 3px solid var(--white);
+            border-radius: 50%;
+            box-shadow: 0 0 0 3px var(--olive-light);
+            z-index: 2;
+        }
+
+        .timeline-item h4 {
+            color: var(--olive-dark);
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+
+        .timeline-item p {
+            color: var(--brown);
+        }
+
+        /* ===== Summary ===== */
+        .summary-paper {
+            background: #fffdf5;
+            border: 2px solid var(--beige-dark);
+            border-radius: 24px;
+            padding: 45px;
+            position: relative;
+            box-shadow: 0 12px 40px rgba(85,107,47,0.15);
+            margin-top: 20px;
+        }
+
+        .summary-paper::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 8px;
+            background: linear-gradient(90deg, var(--olive), var(--gold), var(--olive));
+            border-radius: 24px 24px 0 0;
+        }
+
+        .summary-list {
+            list-style: none;
+            columns: 1;
+        }
+
+        .summary-list li {
+            padding: 12px 0;
+            padding-right: 35px;
+            position: relative;
+            border-bottom: 1px dashed var(--beige-dark);
+            font-size: 1.05rem;
+            break-inside: avoid;
+        }
+
+        .summary-list li::before {
+            content: '◈';
+            position: absolute;
+            right: 0;
+            color: var(--olive);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* ===== Quiz ===== */
+        .quiz-wrap {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px;
+            border: 2px solid var(--olive-light);
+            box-shadow: 0 12px 40px rgba(85,107,47,0.12);
+            margin-top: 20px;
+        }
+
+        .question-card {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--beige-dark);
+        }
+
+        .question-text {
+            font-weight: 700;
+            color: var(--olive-dark);
+            font-size: 1.15rem;
+            margin-bottom: 15px;
+        }
+
+        .options label {
+            display: block;
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            background: #f9f9f5;
+            border: 1px solid var(--beige-dark);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+
+        .options label:hover {
+            background: #f0f5e8;
+            border-color: var(--olive-light);
+        }
+
+        .options input[type="radio"] {
+            margin-left: 10px;
+            accent-color: var(--olive);
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            background: var(--olive);
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            font-size: 1.1rem;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: block;
+            margin: 30px auto 0;
+            border: 2px solid var(--olive);
+        }
+
+        .btn-submit:hover {
+            background: var(--olive-dark);
+            border-color: var(--gold);
+            box-shadow: 0 6px 20px rgba(85,107,47,0.3);
+        }
+
+        .quiz-result {
+            display: none;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .correct-answer { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .wrong-answer { background: #ffebee; color: #c62828; border: 1px solid #ef9a9a; }
+        .neutral-answer { background: #fff8e1; color: #f57f17; border: 1px solid #ffe082; }
+
+        .correct-label { background: #dcedc8 !important; border-color: #7cb342 !important; color: #33691e !important; }
+        .wrong-label { background: #ffcdd2 !important; border-color: #e53935 !important; color: #b71c1c !important; }
+
+        /* ===== Footer ===== */
+        .site-footer {
+            background: linear-gradient(135deg, var(--olive-dark) 0%, var(--brown) 100%);
+            color: var(--beige);
+            padding: 60px 20px 30px;
+            text-align: center;
+            position: relative;
+            margin-top: 80px;
+            border-top: 5px solid var(--gold);
+        }
+
+        .footer-watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10vw;
+            opacity: 0.05;
+            color: var(--gold);
+            pointer-events: none;
+            font-family: 'Amiri', serif;
+        }
+
+        .footer-title {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-grid {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+            margin-bottom: 30px;
+        }
+
+        .footer-card {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(197,160,89,0.3);
+            border-radius: 16px;
+            padding: 18px 30px;
+            min-width: 200px;
+            transition: 0.3s;
+        }
+
+        .footer-card:hover {
+            background: rgba(255,255,255,0.12);
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .footer-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .footer-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .copyright {
+            opacity: 0.6;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+        }
+
+        /* ===== Animations on Scroll ===== */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.9s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.4rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .section-title { font-size: 2rem; }
+            .map-mind { min-height: 700px; }
+            .kaaba-node { width: 60px; height: 60px; }
+            .kaaba-node span { font-size: 0.6rem; }
+            .miqat-branch { min-width: 120px; padding: 10px; }
+            .miqat-branch .dist { font-size: 1.1rem; }
+            .flip-card { height: 180px; }
+            .timeline-container { padding-right: 25px; }
+            .timeline-dot { right: -24px; width: 15px; height: 15px; }
+            .quiz-wrap { padding: 25px; }
+            nav a { font-size: 0.85rem; padding: 6px 12px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 1.8rem; }
+            .bismillah { font-size: 1.5rem; }
+            .temporal-mind { grid-template-columns: 1fr; }
+            .map-mind { min-height: 650px; }
+            .pos-dhul { left: 2%; }
+            .pos-dhat { right: 2%; }
+            .pos-qarn { left: 65%; }
+            .line-dhul { width: 28%; }
+            .line-dhat { width: 28%; }
+        }
+    </style>
+</head>
+<body class="loading">
+
+    <!-- LOADING SCREEN -->
+    <div id="loader">
+        <div class="loader-bg">
+            <div class="loader-shape"></div>
+            <div class="loader-shape"></div>
+            <div class="loader-shape"></div>
+            <div class="loader-shape"></div>
+            <div class="loader-shape"></div>
+            <div class="loader-geo-star"></div>
+        </div>
+        <div class="loader-content">
+            <div class="orbit-system">
+                <div class="orbit-ring outer"><div class="orbit-node"></div></div>
+                <div class="orbit-ring middle"><div class="orbit-node crescent"></div></div>
+                <div class="orbit-ring inner"><div class="orbit-node"></div></div>
+                <div class="loader-kaaba"></div>
+            </div>
+            <div class="loader-text">
+                <h2>الحج إلى البيت الحرام</h2>
+                <p>جاري تحميل الرحلة...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="floating-bg" id="floatingBg"></div>
+
+    <!-- Fixed Navbar -->
+    <nav id="navbar">
+        <ul>
+            <li><a href="#hero" class="active">الرئيسية</a></li>
+            <li><a href="#miqat">المواقيت</a></li>
+            <li><a href="#ihram">الإحرام</a></li>
+            <li><a href="#tawaf">شروط الطواف</a></li>
+            <li><a href="#summary">الملخص</a></li>
+            <li><a href="#quiz">الاختبار</a></li>
+            <li><a href="#footer">عن الموقع</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero">
+        <div class="hero-bg-text">الله</div>
+        <div class="hero-content">
+            <span class="bismillah">بسم الله الرحمن الرحيم</span>
+            <h1 class="hero-title">الحجُّ إلى البيت الحرام</h1>
+            <p class="hero-subtitle">مشروع تعليمي تفاعلي: أحكام الحج وأركانه</p>
+            <div class="hero-badge">إعداد الطالب علي حسين عبدالله</div>
+        </div>
+    </header>
+
+    <!-- Section: Miqat -->
+    <section id="miqat" class="reveal">
+        <div class="section-header">
+            <h2 class="section-title">المواقيت الزمانية والمكانية</h2>
+            <p class="section-desc">معرفة الحدود التي يجب على الحاج والمعتمر الإحرام منها</p>
+        </div>
+
+        <div class="miqat-wrapper">
+            <!-- Temporal Timings -->
+            <div class="card box-gold">
+                <h3 style="color: var(--olive); margin-bottom: 20px; text-align: center;">🕰️ المواقيت الزمانية للحج</h3>
+                <div class="temporal-mind">
+                    <div class="time-node">
+                        <span class="icon">🌙</span>
+                        <h3>شهر شوال</h3>
+                    </div>
+                    <div class="time-node">
+                        <span class="icon">🌙</span>
+                        <h3>شهر ذي القعدة</h3>
+                    </div>
+                    <div class="time-node">
+                        <span class="icon">🌙</span>
+                        <h3>عشرة من ذي الحجة</h3>
+                    </div>
+                </div>
+                <p style="text-align:center; margin-top:15px; color: var(--brown);">تبدأ المواقيت الزمانية من شهر شوال وذي القعدة وعشرة من ذي الحجة.</p>
+            </div>
+
+            <!-- Spatial Map Mind Map -->
+            <div class="card box-olive" style="padding: 15px;">
+                <h3 style="color: var(--olive); margin-bottom: 15px; text-align: center;">🗺️ المواقيت المكانية للحج أو العمرة</h3>
+                <div class="map-mind">
+                    <div class="kaaba-node"><span>الكعبة</span></div>
+
+                    <div class="map-line line-dhul"></div>
+                    <div class="map-line line-juhfa"></div>
+                    <div class="map-line line-qarn"></div>
+                    <div class="map-line line-dhat"></div>
+                    <div class="map-line line-ylml"></div>
+
+                    <div class="miqat-branch pos-dhul">
+                        <span class="dist">400 كم</span>
+                        <span class="name">ذو الحليفة</span>
+                    </div>
+                    <div class="miqat-branch pos-juhfa">
+                        <span class="dist">186 كم</span>
+                        <span class="name">الجحفة</span>
+                    </div>
+                    <div class="miqat-branch pos-qarn">
+                        <span class="dist">78 كم</span>
+                        <span class="name">قرن المنازل</span>
+                    </div>
+                    <div class="miqat-branch pos-dhat">
+                        <span class="dist">100 كم</span>
+                        <span class="name">ذات عرق</span>
+                    </div>
+                    <div class="miqat-branch pos-ylml">
+                        <span class="dist">120 كم</span>
+                        <span class="name">يلملم</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Ihram -->
+    <section id="ihram" class="reveal">
+        <div class="section-header">
+            <h2 class="section-title">أحكام وأداب الإحرام ومحظوراته</h2>
+            <p class="section-desc">المعلومات الأساسية التي يجب على كل حاج معرفتها قبل دخول النسك</p>
+        </div>
+
+        <div class="ihram-grid">
+            <div>
+                <div class="card box-olive" style="margin-bottom: 20px;">
+                    <h3 style="color: var(--olive); margin-bottom: 10px;">📌 تعريف الإحرام</h3>
+                    <p style="font-size: 1.15rem; font-weight: 700; color: var(--brown);">
+                        الإحرام هو: <span style="color: var(--olive);">نية الدخول في النُّسُك.</span>
+                    </p>
+                    <p style="margin-top: 10px; color: var(--brown-light);">
+                        ينوي الحاجُّ أو المعتمر الدخول في النُّسُك بـ <strong>قلبه</strong>، ويُستحب أن يتلفّظ بها.
+                    </p>
+                </div>
+
+                <div class="hadith-box">
+                    <strong style="display:block; margin-bottom:8px; color: var(--olive);">حكم التلبية:</strong>
+                    <p style="margin-bottom:10px;">حكم التلبية: <strong style="color:var(--gold);">سُنّة</strong>، لقوله (ص):</p>
+                    <em style="color: var(--olive-dark); display:block; margin-top:5px;">
+                        "أتاني جبريل، فأمرني أن آمر أصحابي أن يرفعوا أصواتهم بالإهلال والتلبية."
+                    </em>
+                </div>
+            </div>
+
+            <div class="talbiyah-box">
+                <h3>صيغة التلبية</h3>
+                <p class="talbiyah-text">
+                    لَبَّيْكَ اللَّهُمَّ لَبَّيْكَ، لَبَّيْكَ لا شَرِيكَ لَكَ لَبَّيْكَ، إِنَّ الْحَمْدَ وَالنِّعْمَةَ لَكَ وَالْمُلْكَ، لا شَرِيكَ لَكَ.
+                </p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-top: 30px;">
+            <h3 style="text-align:center; color: var(--olive); margin-bottom: 25px;">✨ أداب الإحرام (يُسنُّ لمريد الإحرام الأمور التالية)</h3>
+            <div class="etiquettes-flow">
+                <div class="etiquette-item">
+                    <div class="etiquette-number">1</div>
+                    <h4>تقليم الأظافر</h4>
+                    <p style="font-size:0.9rem; color: var(--brown-light);">قص الأظافر قبل الإحرام استعداداً للطهارة</p>
+                </div>
+                <div class="etiquette-item">
+                    <div class="etiquette-number">2</div>
+                    <h4>حلق الشعر وقص الشارب</h4>
+                    <p style="font-size:0.9rem; color: var(--brown-light);">حلق شعر الإبط والعانة وقصّ الشارب</p>
+                </div>
+                <div class="etiquette-item">
+                    <div class="etiquette-number">3</div>
+                    <h4>الاغتسال ولبس الإحرام</h4>
+                    <p style="font-size:0.9rem; color: var(--brown-light);">التطهّر بالغسل ثم لباس الإحرام</p>
+                </div>
+                <div class="etiquette-item">
+                    <div class="etiquette-number">4</div>
+                    <h4>التطيّب</h4>
+                    <p style="font-size:0.9rem; color: var(--brown-light);">استعمال الطيب في البدن قبل الإحرام</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px;">
+            <h3 style="text-align:center; color: var(--brown); margin-bottom: 10px;">🚫 محظورات الإحرام</h3>
+            <p style="text-align:center; color: var(--brown-light); margin-bottom: 25px;">
+                إذا أحرم المسلم بالحج أو العمرة أو بهما معاً، فإنّه يحظر عليه فعل الأمور الآتية:
+            </p>
+            <div class="flip-grid">
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">✂️</div>
+                            <h4>1. حلق الشعر</h4>
+                        </div>
+                        <div class="flip-back">
+                            حلق الشعر أو نتفه عمداً أثناء الإحرام من المحرمات التي تستوجب الفدية.
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">💅</div>
+                            <h4>2. تقليم الأظافر</h4>
+                        </div>
+                        <div class="flip-back">
+                            تقليم الأظافر بعد دخول الإحرام محظور على الرجل والمرأة.
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">🎩</div>
+                            <h4>3. تغطية الرأس</h4>
+                        </div>
+                        <div class="flip-back">
+                            تغطية الرأس بالنسبة إلى الرجل من محظورات الإحرام، أما المرأة فلا بأس بستر رأسها.
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">👕</div>
+                            <h4>4. لبس المخيط</h4>
+                        </div>
+                        <div class="flip-back">
+                            لبس المخيط بالنسبة إلى الرجل مثل الثوب ونحوه؛ لأن الإحرام يقتضي التخلي عن التفصيل.
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">🧴</div>
+                            <h4>5. التطيّب</h4>
+                        </div>
+                        <div class="flip-back">
+                            التطيّب بوضعه في البدن أو الثوب أو استعماله في الدهان بعد الإحرام محظور.
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">🦌</div>
+                            <h4>6. صيد البرّ</h4>
+                        </div>
+                        <div class="flip-back">
+                            صيد البرّ أو قتله محظور على المحرم؛ لأن الإحرام رحمة بالحيوان كما هو رحمة بالإنسان.
+                        </div>
+                    </div>
+                </div>
+                <div class="flip-card">
+                    <div class="flip-inner">
+                        <div class="flip-front">
+                            <div class="flip-icon">💍</div>
+                            <h4>7. عقد الزواج</h4>
+                        </div>
+                        <div class="flip-back">
+                            عقد الزواج وما يترتب عليه محظور في الإحرام؛ لأنه من شعائر الله التي تحتاج إلى تجرد.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Tawaf Conditions -->
+    <section id="tawaf" class="reveal">
+        <div class="section-header">
+            <h2 class="section-title">شروط الطواف</h2>
+            <p class="section-desc">الشروط الواجب توفرها لصحة الطواف بالبيت الحرام</p>
+        </div>
+
+        <div class="timeline-container">
+            <div class="timeline-line-main"></div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h4>1. النية</h4>
+                <p>يجب أن ينوي المسلم الطواف قلباً، فالنية ركن من أركان العبادات ولا تصحّ من غيرها.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h4>2. الطهارة</h4>
+                <p>يجب على الطائف أن يكون على وضوء أو غسل؛ لأن الطواف صلاةٌ إلا أن الكلام فيه جائز، ولا يصح الطواف بدون طهارة.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h4>3. ستر العورة</h4>
+                <p>من شروط صحة الطواف ستر العورة بحيث لا يظهر منها شيء أثناء الطواف.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h4>4. الموالاة بين الأشواط</h4>
+                <p>أن يوالي بين الأشواط إلا إذا أقيمت الصلاة أو حضرة جنازة، فإنه يجوز الفصل عند الحاجة.</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <h4>5. الطواف بجميع البيت</h4>
+                <p>أن يكون الطواف بجميع البيت، فلو دخل من <strong>حِجْر إسماعيل</strong> لم يصح طوافه لأنه ترك جزءاً من البيت.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section: Summary -->
+    <section id="summary" class="reveal">
+        <div class="section-header">
+            <h2 class="section-title">ملخص الدرس</h2>
+        </div>
+        <div class="summary-paper">
+            <ul class="summary-list">
+                <li><strong>المواقيت الزمانية:</strong> شهر شوال وذي القعدة وعشرة من ذي الحجة.</li>
+                <li><strong>المواقيت المكانية:</strong> ذو الحليفة (400كم)، الجحفة (186كم)، قرن المنازل (78كم)، ذات عرق (100كم)، يلملم (120كم).</li>
+                <li><strong>الإحرام:</strong> هو نية الدخول في النسك، ويشرع قبله التقليم والحلق والاغتسال والتطيب.</li>
+                <li><strong>التلبية:</strong> سنة مؤكدة، صيغتها: "لبيك اللهم لبيك..."</li>
+                <li><strong>محظورات الإحرام:</strong> حلق الشعر، تقليم الأظافر، تغطية الرأس (للرجل)، لبس المخيط (للرجل)، التطيب، صيد البر، عقد النكاح.</li>
+                <li><strong>شروط الطواف:</strong> النية، الطهارة، ستر العورة، الموالاة بين الأشواط، وطواف جميع البيت دون دخول حِجْر إسماعيل.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Section: Quiz -->
+    <section id="quiz" class="reveal">
+        <div class="section-header">
+            <h2 class="section-title">اختبر معلوماتك</h2>
+            <p class="section-desc">أجب عن الأسئلة التالية من محتوى المشروع</p>
+        </div>
+
+        <div class="quiz-wrap" id="quizForm">
+            <div class="question-card" data-correct="b">
+                <div class="question-text">1. ما هي المواقيت الزمانية للحج؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="a"> أ) شهر رمضان والعشر من ذي الحجة</label>
+                    <label><input type="radio" name="q1" value="b"> ب) شهر شوال وذي القعدة وعشرة من ذي الحجة</label>
+                    <label><input type="radio" name="q1" value="c"> ج) أيام التشريق فقط</label>
+                </div>
+            </div>
+
+            <div class="question-card" data-correct="c">
+                <div class="question-text">2. ما هو ميقات أهل المدينة؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="a"> أ) يلملم</label>
+                    <label><input type="radio" name="q2" value="b"> ب) قرن المنازل</label>
+                    <label><input type="radio" name="q2" value="c"> ج) ذو الحليفة</label>
+                </div>
+            </div>
+
+            <div class="question-card" data-correct="a">
+                <div class="question-text">3. ما هو تعريف الإحرام؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="a"> أ) نية الدخول في النسك</label>
+                    <label><input type="radio" name="q3" value="b"> ب) لبس الثوب الأبيض فقط</label>
+                    <label><input type="radio" name="q3" value="c"> ج) السعي بين الصفا والمروة</label>
+                </div>
+            </div>
+
+            <div class="question-card" data-correct="b">
+                <div class="question-text">4. ما حكم التلبية؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q4" value="a"> أ) واجب</label>
+                    <label><input type="radio" name="q4" value="b"> ب) سنة</label>
+                    <label><input type="radio" name="q4" value="c"> ج) مباح</label>
+                </div>
+            </div>
+
+            <div class="question-card" data-correct="b">
+                <div class="question-text">5. أي مما يلي من محظورات الإحرام؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q5" value="a"> أ) الاغتسال قبل الإحرام</label>
+                    <label><input type="radio" name="q5" value="b"> ب) تقليم الأظافر بعد الإحرام</label>
+                    <label><input type="radio" name="q5" value="c"> ج) التلبية</label>
+                </div>
+            </div>
+
+            <div class="question-card" data-correct="b">
+                <div class="question-text">6. أي شرط من شروط الطواف؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q6" value="a"> أ) الصيام</label>
+                    <label><input type="radio" name="q6" value="b"> ب) الطهارة</label>
+                    <label><input type="radio" name="q6" value="c"> ج) لبس الثوب الأبيض</label>
+                </div>
+            </div>
+
+            <div class="question-card" data-correct="b">
+                <div class="question-text">7. ماذا يفسد الطواف لو دخل فيه المسلم؟</div>
+                <div class="options">
+                    <label><input type="radio" name="q7" value="a"> أ) المطاف</label>
+                    <label><input type="radio" name="q7" value="b"> ب) حِجْر إسماعيل</label>
+                    <label><input type="radio" name="q7" value="c"> ج) بئر زمزم</label>
+                </div>
+            </div>
+
+            <button class="btn-submit" onclick="submitQuiz()">إظهار النتيجة</button>
+
+            <div id="resultBox" class="quiz-result"></div>
+        </div>
+    </section>
+
+    <!-- Footer / Credits -->
+    <footer class="site-footer" id="footer">
+        <div class="footer-watermark">الله</div>
+        <div class="footer-title">تم بحمد الله</div>
+        <div class="footer-grid">
+            <div class="footer-card">
+                <div class="footer-label">المدرسة</div>
+                <div class="footer-value">مدرسة الأهلية</div>
+            </div>
+            <div class="footer-card">
+                <div class="footer-label">الدولة</div>
+                <div class="footer-value">مملكة البحرين 🇧🇭</div>
+            </div>
+            <div class="footer-card">
+                <div class="footer-label">الطالب</div>
+                <div class="footer-value">علي حسين عبدالله</div>
+            </div>
+            <div class="footer-card">
+                <div class="footer-label">الصف</div>
+                <div class="footer-value">9C</div>
+            </div>
+        </div>
+        <div class="copyright">
+            مشروع تعليمي في مادة التربية الإسلامية | جميع الحقوق محفوظة © 2025
+        </div>
+    </footer>
+
+    <script>
+        // ===== Generate Floating Islamic Shapes (Main Page Background) =====
+        const bgContainer = document.getElementById('floatingBg');
+        const shapeTypes = ['shape-kaaba', 'shape-star', 'shape-crescent', 'shape-geo'];
+        const colors = ['#556b2f', '#8fbc8f', '#c5a059', '#6b8e23', '#8d6e63'];
+
+        for (let i = 0; i < 20; i++) {
+            const div = document.createElement('div');
+            const type = shapeTypes[Math.floor(Math.random() * shapeTypes.length)];
+            div.className = `shape ${type}`;
+            const size = Math.floor(Math.random() * 40) + 30;
+            div.style.width = size + 'px';
+            div.style.height = size + 'px';
+            div.style.left = Math.random() * 100 + '%';
+            div.style.animationDuration = (Math.random() * 30 + 20) + 's';
+            div.style.animationDelay = (Math.random() * 15) + 's';
+            div.style.color = colors[Math.floor(Math.random() * colors.length)];
+            bgContainer.appendChild(div);
+        }
+
+        // ===== LOADER HIDE =====
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loader');
+                loader.classList.add('hidden-loader');
+                document.body.classList.remove('loading');
+            }, 2800);
+        });
+
+        // ===== Navbar Active State on Scroll =====
+        const sections = document.querySelectorAll('section, header');
+        const navLinks = document.querySelectorAll('nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(sec => {
+                const secTop = sec.offsetTop - 150;
+                if (scrollY >= secTop) {
+                    current = sec.getAttribute('id');
+                }
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // ===== Scroll Reveal Animation =====
+        const revealElements = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // ===== Quiz Logic =====
+        function submitQuiz() {
+            const questions = document.querySelectorAll('.question-card');
+            let score = 0;
+            let total = questions.length;
+            let allAnswered = true;
+
+            document.querySelectorAll('.options label').forEach(lbl => {
+                lbl.classList.remove('correct-label', 'wrong-label');
+            });
+
+            questions.forEach(q => {
+                const correct = q.getAttribute('data-correct');
+                const selected = q.querySelector('input[type="radio"]:checked');
+                const labels = q.querySelectorAll('label');
+
+                if (!selected) allAnswered = false;
+
+                labels.forEach(lbl => {
+                    const input = lbl.querySelector('input');
+                    if (input.value === correct) {
+                        lbl.classList.add('correct-label');
+                    } else if (selected && input === selected && input.value !== correct) {
+                        lbl.classList.add('wrong-label');
+                    }
+                });
+
+                if (selected && selected.value === correct) score++;
+            });
+
+            const resultBox = document.getElementById('resultBox');
+            if (!allAnswered) {
+                resultBox.style.display = 'block';
+                resultBox.className = 'quiz-result neutral-answer';
+                resultBox.textContent = '⚠️ يرجى الإجابة على جميع الأسئلة';
+                return;
+            }
+
+            resultBox.style.display = 'block';
+            let msg = '';
+            let cls = '';
+
+            if (score === total) {
+                msg = `🌟 ممتاز! علامتك الكاملة: ${score} / ${total}`;
+                cls = 'correct-answer';
+            } else if (score >= total - 2) {
+                msg = `👏 جيد جداً! نتيجتك: ${score} / ${total}`;
+                cls = 'neutral-answer';
+            } else {
+                msg = `📖 حاول مراجعة الدرس مرة أخرى! نتيجتك: ${score} / ${total}`;
+                cls = 'wrong-answer';
+            }
+
+            resultBox.className = `quiz-result ${cls}`;
+            resultBox.textContent = msg;
+            document.querySelectorAll('.options input').forEach(inp => inp.disabled = true);
+        }
+    </script>
+</body>
+</html>
